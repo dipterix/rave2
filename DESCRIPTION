@@ -1,0 +1,26 @@
+Package: rave2
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    utils,
+    stringr (>= 1.4.0),
+    htmltools (>= 0.5.0),
+    shiny (>= 1.5.0),
+    shinyjs (>= 1.1),
+    shinydashboard (>= 0.7.1),
+    rlang (>= 0.4.7),
+    dipsaus (>= 0.0.9.1),
+    threeBrain (>= 0.1.8.1),
+    raveio (>= 0.0.3),
+    ravebase (>= 0.0.1),
+    R6 (>= 2.4.1),
+    shinyWidgets (>= 0.5.3)
+RoxygenNote: 7.1.1
