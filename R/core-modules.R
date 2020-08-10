@@ -184,7 +184,7 @@ app_ui <- function(adapter, theme = 'purple', token = NULL){
 }
 
 app_ui_env[['rave-main-app']] <- function(adapter, theme = 'purple', ...){
-  title = "R Analysis and Visualization of ECoG/iEEG Data"
+  title = "RAVE App"
   header = sprintf('RAVE (%s)', as.character(utils::packageVersion(pkg_name)))
 
   adapter$module_list %?<-% find_modules()
@@ -551,7 +551,7 @@ NULL
 #' @rdname start-app
 #' @export
 start_rave <- function(host = '127.0.0.1', port = NULL, launch_browser=TRUE,
-                       test_mode = FALSE, token = NULL, theme = 'purple',
+                       test_mode = FALSE, token = NULL, theme = 'green',
                        .adapter = dipsaus::fastmap2()){
   adapter <- .adapter
   adapter$test.mode = isTRUE(test_mode)

@@ -11,7 +11,7 @@ start_rave(
   launch_browser = TRUE,
   test_mode = FALSE,
   token = NULL,
-  theme = "purple",
+  theme = "green",
   .adapter = dipsaus::fastmap2()
 )
 }

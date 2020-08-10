@@ -99,8 +99,17 @@ rave_dash_page2 <- function(
     shiny::div(
     id = '__rave__mask__',
     class = '',
-    shiny::div(class = 'loading_info',
-               'asdas')
+    shiny::div(
+      class = 'loading_info',
+      shiny::a(
+        href = 'https://openwetware.org/wiki/RAVE',
+        target = '_blank',
+        shiny::span(
+          'R Analysis & Visualization for iEEG Data',
+          style = 'color:#444444'
+        )
+      )
+    )
   )), ui$children)
 
   ui <- addDeps(ui)

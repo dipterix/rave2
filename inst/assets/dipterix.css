@@ -165,9 +165,9 @@ body.rave-noscroll {
   color: #f2f2f2;
   text-align: right;
   padding: 20px;
-  position: relative;
-  top: 30%;
-  float: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 #__rave__mask__ .loading_info img {
@@ -844,6 +844,8 @@ body .wrapper {
 
 .rave-dashboard-loader-content {
   background-color: #FFFFFF;
+  max-width: 1024px;
+  height: max-content;
 }
 
 .rave-dashboard-loader-wrapper .rave-dashboard-loader{
@@ -852,6 +854,8 @@ body .wrapper {
   overflow: hidden;
   height: 0;
   transition: height 0.5s;
+  display: flex;
+  justify-content: center;
 }
 
 .rave-dashboard-loader-wrapper .rave-dashboard-loader>.shiny-input-panel {
