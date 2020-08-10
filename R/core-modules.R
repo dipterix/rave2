@@ -188,6 +188,8 @@ app_ui_env[['rave-main-app']] <- function(adapter, theme = 'purple', ...){
   header = sprintf('RAVE (%s)', as.character(utils::packageVersion(pkg_name)))
 
   adapter$module_list %?<-% find_modules()
+  # TODO: FIXME: REMOVE this
+  adapter$module_list <- adapter$module_list[adapter$module_list$module_id == 'ravepreprocessoverview', ]
   minfos <- adapter$module_list
   minfos <- minfos[minfos$active, ]
   groups <- unique(minfos$group_name)
@@ -246,6 +248,7 @@ app_ui_env[['rave-main-app']] <- function(adapter, theme = 'purple', ...){
     id = '..rave_sidebar..'
   ), items))
 
+
   body_items <- lapply(minfos$module_id, function(module_id){
     as.call(list(
       quote(shinydashboard::tabItem),
@@ -260,11 +263,11 @@ app_ui_env[['rave-main-app']] <- function(adapter, theme = 'purple', ...){
     quote(shinydashboard::tabItems)
   ), body_items))
 
-  rave_dash_page(
+  rave_dash_page2(
     skin = theme,
     title = title,
     header = rave_dash_header(title = header, btn_text_right = ' '),
-    control = rave_dash_control(disable = TRUE),
+    rightsidebar = NULL,
     sidebar = rave_dash_sidebar(
       # width = '280px',
       eval(sidebar_call)

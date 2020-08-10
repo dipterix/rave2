@@ -1,14 +1,14 @@
 
-register_js <- function(rmd = FALSE){
-  if(requireNamespace('shinyalert', quietly = TRUE)){
-    shiny::tagList(
-      # shinyalert::useShinyalert(rmd = rmd),
-      shinyjs::useShinyjs(rmd = rmd),
-      shinyWidgets::useSweetAlert()
-    )
-  } else {
-    shinyjs::useShinyjs()
-  }
+#' Shiny validation error 'div'
+#' @description Used within shiny render functions to display shiny error
+#' messages without using \code{\link[shiny]{validate}}.
+#' @param ... passed to \code{div}
+#' @param class 'HTML' class
+#' @return A 'HTML' tag.
+#' @export
+div_validation_error <- function(..., class = NULL){
+  class <- c(class, 'shiny-output-error-validation')
+  shiny::div(..., class = unique(class))
 }
 
 #' Show Alert in Shiny apps
@@ -215,6 +215,7 @@ guess_shiny_update <- function(call, parse = TRUE){
 SHINY_OUTPUT_FUNCTIONS = dipsaus::fastmap2()
 SHINY_OUTPUT_FUNCTIONS$shiny = list(
   'htmlOutput' = 'shiny::renderUI',
+  'uiOutput' = 'shiny::renderUI',
   'verbatimTextOutput' = 'shiny::renderPrint',
   'plotOutput' = 'shiny::renderPlot'
 )

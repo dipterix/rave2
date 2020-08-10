@@ -10,161 +10,71 @@ appendDependencies = function (x, value) {
 
 # Modified addDeps:
 addDeps = function (x) {
+
+  if (getOption("shiny.minified", TRUE)) {
+    adminLTE_js <- "app.min.js"
+    shinydashboard_js <- "shinydashboard.min.js"
+    adminLTE_css <- c("AdminLTE.min.css", "_all-skins.min.css")
+  }
+  else {
+    adminLTE_js <- "app.js"
+    shinydashboard_js <- "shinydashboard.js"
+    adminLTE_css <- c("AdminLTE.css", "_all-skins.css")
+  }
+
   dashboardDeps <- list(
-    # Load customized style and scripts
     htmltools::htmlDependency(
-      "dipsaus", "0.1.7",
-      c(file = system.file('shiny-addons/dipsaus', package = 'dipsaus')),
-      script = c(
-        'dipsaus-dipterix-lib.js'
-      ),
-      stylesheet = 'dipsaus.css'
-    ),
-    htmltools::htmlDependency(
-      "Dipterix", "0.0.1",
-      c(file = system.file('assets/', package = pkg_name)),
+      name = "Dipterix", version = as.character(utils::packageVersion(pkg_name)),
+      src = c(file = system.file('assets/', package = pkg_name)),
       script = c(
         'dipterix.js',
         'dipterix_inputs.js'
       ),
       stylesheet = 'dipterix.css'
-    ))
+    )
+    # # load AdminLTE
+    # htmltools::htmlDependency(
+    #   "AdminLTE", "2.0.6",
+    #   c(file = system.file("AdminLTE", package = "shinydashboard")),
+    #   script = adminLTE_js, stylesheet = adminLTE_css)
+    # htmltools::htmlDependency(
+    #   "shinydashboardPlus", as.character(utils::packageVersion("shinydashboardPlus")),
+    #   c(file = system.file("shinydashboardPlus-0.6.0", package = "shinydashboardPlus")),
+    #   script = c("js/app.min.js", "js/custom.js"),
+    #   stylesheet = c("css/AdminLTE.min.css", "css/_all-skins.min.css")
+    # ),
+    # htmltools::htmlDependency(
+    #   "shinydashboard",
+    #   as.character(utils::packageVersion("shinydashboard")),
+    #   c(file = system.file(package = "shinydashboard")),
+    #   script = shinydashboard_js,
+    #   stylesheet = "shinydashboard.css"),
+  )
   appendDependencies(x, dashboardDeps)
 }
 
-rave_dash_page <- function(
-  header, sidebar, control, body, title = NULL,
-  skin = c("blue", "black", "purple", "green", "red", "yellow"), controlbar_opened = FALSE,
-  initial_mask = NULL
-) {
-  skin <- match.arg(skin)
-  extractTitle <- function(header) {
-    x <- header$children[[2]]
-    if (x$name == "span" && !is.null(x$attribs$class) &&
-        x$attribs$class == "logo" && length(x$children) != 0) {
-      x$children[[1]]
-    } else {
-      ""
-    }
-  }
-  title <- ifelse(is.null(title), extractTitle(header), title)
-  content <- shiny::div(class = "wrapper", header, sidebar, body, control)
-
-  findAttribute = function (x, attr, val) {
-    if (is.atomic(x))
-      return(FALSE)
-    if (!is.null(x$attribs[[attr]])) {
-      if (identical(x$attribs[[attr]], val))
-        return(TRUE)
-      else return(FALSE)
-    }
-    if (length(x$children) > 0) {
-      return(any(unlist(lapply(x$children, findAttribute, attr,val))))
-    }
+findAttribute = function (x, attr, val) {
+  if (is.atomic(x))
     return(FALSE)
+  if (!is.null(x$attribs[[attr]])) {
+    if (identical(x$attribs[[attr]], val))
+      return(TRUE)
+    else return(FALSE)
   }
-
-
-  collapsed <- findAttribute(sidebar, "data-collapsed", "true")
-
-
-
-  # Modified addDeps:
-  addDeps = function (x)
-  {
-    if (getOption("shiny.minified", TRUE)) {
-      adminLTE_js <- "app.min.js"
-      shinydashboard_js <- "shinydashboard.min.js"
-      adminLTE_css <- c("AdminLTE.min.css", "_all-skins.min.css")
-    }
-    else {
-      adminLTE_js <- "app.js"
-      shinydashboard_js <- "shinydashboard.js"
-      adminLTE_css <- c("AdminLTE.css", "_all-skins.css")
-    }
-    dashboardDeps <- list(
-      # Load customized style and scripts
-      htmltools::htmlDependency(
-        "dipsaus", "0.1.7",
-        c(file = system.file('shiny-addons/dipsaus', package = 'dipsaus')),
-        script = c(
-          'dipsaus-dipterix-lib.js'
-        ),
-        stylesheet = 'dipsaus.css'
-      ),
-      htmltools::htmlDependency(
-        "Dipterix", "0.0.1",
-        c(file = system.file('assets/', package = 'ravecore')),
-        script = c(
-          'dipterix.js',
-          'dipterix_inputs.js'
-        ),
-        stylesheet = 'dipterix.css'
-      ),
-      # load AdminLTE
-      htmltools::htmlDependency(
-        "AdminLTE", "2.0.6",
-        c(file = system.file("AdminLTE", package = "shinydashboard")),
-        script = adminLTE_js, stylesheet = adminLTE_css),
-      htmltools::htmlDependency(
-        "shinydashboard",
-        as.character(utils::packageVersion("shinydashboard")),
-        c(file = system.file(package = "shinydashboard")),
-        script = shinydashboard_js,
-        stylesheet = "shinydashboard.css"))
-
-    appendDependencies = function (x, value)
-    {
-      if (inherits(value, "html_dependency"))
-        value <- list(value)
-      old <- attr(x, "html_dependencies", TRUE)
-      htmltools::htmlDependencies(x) <- c(old, value)
-      x
-    }
-
-    appendDependencies(x, dashboardDeps)
+  if (length(x$children) > 0) {
+    return(any(unlist(lapply(x$children, findAttribute, attr,val))))
   }
-
-
-  if(controlbar_opened){
-    cls = ' control-sidebar-open'
-  }else{
-    cls = ''
-  }
-
-  addDeps(
-    shiny::tags$body(
-      class = paste0("skin-", skin, cls), # if you want control-sidebar to be opened, add " control-sidebar-open"
-
-      style = "min-height: 611px;",
-      shiny::tags$head(shiny::tags$link(
-        rel = "icon", type = "image/x-icon",
-        href = dipsaus::to_datauri(system.file('assets/images/favicon.ico', package = 'ravecore')))),
-      shiny::bootstrapPage(
-        register_js(),
-        shiny::div(
-          id = '__rave__mask__',
-          class = ifelse(is.null(initial_mask), 'hidden', ''),
-          shiny::div(class = 'loading_info',
-                     initial_mask)
-        ),
-        content,
-        title = title
-      )
-    )
-  )
+  return(FALSE)
 }
-
-
 
 rave_dash_page2 <- function(
   header, sidebar, body, rightsidebar = NULL, footer = NULL,
   title = NULL, collapse_sidebar = FALSE,
-  sidebar_background = NULL, sidebar_fullCollapse = FALSE,
+  sidebar_background = NULL,
   enable_preloader = TRUE, loading_duration = 1, ...
 ){
 
-  addDeps(shinydashboardPlus::dashboardPagePlus(
+  ui <- shinydashboardPlus::dashboardPagePlus(
     header = header,
     sidebar = sidebar,
     body = body,
@@ -173,11 +83,28 @@ rave_dash_page2 <- function(
     title = title,
     collapse_sidebar = collapse_sidebar,
     sidebar_background = sidebar_background,
-    sidebar_fullCollapse = sidebar_fullCollapse,
+    sidebar_fullCollapse = TRUE,
     enable_preloader = enable_preloader,
     loading_duration = loading_duration,
     ...
-  ))
+  )
+
+  ui$children <- htmltools::tagAppendChild(shiny::tagList(
+    shiny::tags$head(shiny::tags$link(
+      rel = "icon", type = "image/x-icon",
+      href = dipsaus::to_datauri(system.file('assets/images/favicon.ico', package = pkg_name)))),
+    shinyjs::useShinyjs(),
+    shinyWidgets::useSweetAlert(),
+    dipsaus::use_shiny_dipsaus(),
+    shiny::div(
+    id = '__rave__mask__',
+    class = '',
+    shiny::div(class = 'loading_info',
+               'asdas')
+  )), ui$children)
+
+  ui <- addDeps(ui)
+
 
 }
 
@@ -189,12 +116,6 @@ rave_dash_header <- function (
   ..., title = NULL, titleWidth = NULL, disable = FALSE,
   btn_text_right = 'Controls', .list = NULL)
 {
-  # shinydashboardPlus::dashboardHeaderPlus(
-  #   ...,
-  #   title = title,
-  #   titleWidth = titleWidth,
-  #   disable = disable, .list = .list,
-  # )
   items <- .list
   titleWidth <- htmltools::validateCssUnit(titleWidth)
   custom_css <- NULL
@@ -215,7 +136,7 @@ rave_dash_header <- function (
           class = 'nav navbar-nav',
           shiny::tags$li(
             shiny::a(
-              href = "#", class = "nav-item nav-link force-recalculate",
+              href = "#", class = "nav-item nav-link force-recalculate sidebar-toggle",
               id = "rave_nav_sidebar",
               `data-toggle` = "offcanvas",
               role = "button", shiny::span(class = "sr-only", "Toggle navigation"),

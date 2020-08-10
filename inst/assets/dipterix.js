@@ -32,6 +32,15 @@ $(document).ready(function(){
 
 	$(document).on('click', '#rave_nav_sidebar', () => {
 	  let collapsed = $('body').hasClass("sidebar-collapse");
+
+    /*
+	  if( collapsed ){
+	    $('body').removeClass("sidebar-collapse");
+	  } else {
+	    $('body').addClass("sidebar-collapse");
+	  }
+	  collapsed = !collapsed;
+    */
 	  Shiny.setInputValue('rave_sidebar_collapsed', collapsed, {priority: "event"});
 	});
 
