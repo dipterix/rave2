@@ -24,4 +24,6 @@ Imports:
     raveio (>= 0.0.3),
     ravebase (>= 0.0.1),
     R6 (>= 2.4.1)
+Remotes:
+    github::dipterix/ravebase
 RoxygenNote: 7.1.1
